@@ -1,26 +1,29 @@
 name: Docker Build and Publish
 
 on:
-  push:
-    branches:
-      - master
+    push:
+        branches:
+            - master
 
 jobs:
-  build-and-publish:
-    runs-on: ubuntu-latest
+    build-and-publish:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v1
 
-      - name: Login to GitHub Packages
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u ${{ github.repository_owner }} --password-stdin
+            - name: Login to GitHub Packages
+              run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u ${{ github.repository_owner }} --password-stdin
 
-      - name: Build and push Docker image for main
-        if: github.ref == 'refs/heads/master'
-        run: |
-          docker build -t docker.pkg.github.com/muhammadashouri/latestapps/latestapps:latest .
-          docker push docker.pkg.github.com/muhammadashouri/latestapps/latestapps:latest
+            - name: Build and push
+              uses: docker/build-push-action@v3
+              with:
+                  context: .
+                  platforms: linux/amd64,linux/arm64
+                  push: true
+                  tags: |
+                      ghcr.io/muhammadashouri/latestapps:latest
