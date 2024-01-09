@@ -22,5 +22,5 @@ jobs:
       - name: Build and push Docker image for main
         if: github.ref == 'refs/heads/master'
         run: |
-          docker build -t docker.pkg.github.com/${{ github.repository_owner }}/latestversion/latestversion:latest .
-          docker push docker.pkg.github.com/${{ github.repository_owner }}/latestversion/latestversion:latest
+          docker build -t docker.pkg.github.com/${{ github.repository_owner }}/latestapps/latestapps:latest .
+          docker push docker.pkg.github.com/${{ github.repository_owner }}/latestapps/latestapps:latest
