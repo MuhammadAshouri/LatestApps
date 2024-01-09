@@ -23,8 +23,9 @@ jobs:
               with:
                   context: .
                   file: ./Dockerfile.arm64
+                  platforms: linux/arm64
                   push: true
-                  tags: ghcr.io/muhammadashouri/latestapps:latest-arm64
+                  tags: ghcr.io/muhammadashouri/latestapps:/latestappslatest-arm64
 
     build_and_push_amd64:
         runs-on: ubuntu-latest
@@ -43,5 +44,6 @@ jobs:
               with:
                   context: .
                   file: ./Dockerfile.amd64
+                  platforms: linux/amd64
                   push: true
-                  tags: ghcr.io/muhammadashouri/latestapps:latest-amd64
+                  tags: ghcr.io/muhammadashouri/latestapps/latestapps:latest-amd64
