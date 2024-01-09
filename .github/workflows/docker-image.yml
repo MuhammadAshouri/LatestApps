@@ -38,7 +38,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            MuhammadAshouri/LatestApps:latest
-            MuhammadAshouri/LatestApps:${{github.ref_name}}
             ghcr.io/MuhammadAshouri/LatestApps:latest
             ghcr.io/MuhammadAshouri/LatestApps:${{github.ref_name}}
