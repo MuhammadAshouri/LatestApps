@@ -1,22 +1,19 @@
-﻿FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
-WORKDIR /app
-EXPOSE 443
+﻿FROM python:3.10-slim
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["LatestVpnVersion/LatestVpnVersion.csproj", "LatestVpnVersion/"]
-RUN dotnet restore "LatestVpnVersion/LatestVpnVersion.csproj"
-COPY . .
-WORKDIR "/src/LatestVpnVersion"
-RUN dotnet build "LatestVpnVersion.csproj" -c $BUILD_CONFIGURATION -o /app/build
+ENV PYTHONUNBUFFERED 1
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "LatestVpnVersion.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+WORKDIR /code
 
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "LatestVpnVersion.dll"]
+RUN apt-get update \
+    && apt-get install -y curl unzip gcc python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY ./requirements.txt /code/
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+
+COPY . /code
+
+RUN apt-get remove -y curl unzip gcc python3-dev
+
+
+CMD ["python", "main.py"]
