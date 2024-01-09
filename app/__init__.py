@@ -14,7 +14,7 @@ __version__ = "0.1"
 
 
 app = FastAPI(
-    title="Latest_Apps",
+    title="Latest Apps",
     description="Simple Project To Download Latest Version Of VPN Clients.",
     version=__version__,
     docs_url='/docs' if DOCS else None,
