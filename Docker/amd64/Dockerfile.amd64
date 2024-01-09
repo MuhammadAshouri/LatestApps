@@ -10,11 +10,11 @@ COPY ["../../LatestVpnVersion/LatestVpnVersion.csproj", "../../LatestVpnVersion/
 RUN dotnet restore "../../LatestVpnVersion/LatestVpnVersion.csproj"
 COPY . .
 WORKDIR "/src/LatestVpnVersion"
-RUN dotnet build "LatestVpnVersion.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "../../LatestVpnVersion.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "LatestVpnVersion.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "../../LatestVpnVersion.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
