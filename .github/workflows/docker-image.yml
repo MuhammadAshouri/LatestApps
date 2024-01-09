@@ -21,8 +21,8 @@ jobs:
             - name: Build and push ARM64 image
               uses: docker/build-push-action@v3
               with:
-                  context: ./arm64
-                  file: ./arm64/Dockerfile.arm64
+                  context: ./Docker/arm64
+                  file: ./Docker/arm64/Dockerfile.arm64
                   push: true
                   tags: ghcr.io/muhammadashouri/latestapps:latest-arm64
 
@@ -41,7 +41,7 @@ jobs:
             - name: Build and push AMD64 image
               uses: docker/build-push-action@v3
               with:
-                  context: ./amd64
-                  file: ./amd64/Dockerfile.amd64
+                  context: ./Docker/amd64
+                  file: ./Docker/amd64/Dockerfile.amd64
                   push: true
                   tags: ghcr.io/muhammadashouri/latestapps:latest-amd64
