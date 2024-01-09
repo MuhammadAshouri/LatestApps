@@ -6,7 +6,7 @@ on:
             - master
 
 jobs:
-    build_and_push_arm64:
+    build_and_push:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
@@ -25,36 +25,11 @@ jobs:
                   username: ${{ github.repository_owner }}
                   password: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Build and push ARM64 image
+            - name: Build and push image
               uses: docker/build-push-action@v3
               with:
                   context: .
                   file: ./Dockerfile
-                  platforms: linux/arm64
+                  platforms: linux/arm64,linux/amd64
                   push: true
-                  tags: ghcr.io/muhammadashouri/latestapps:latest-arm64
-
-    build_and_push_amd64:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v2
-
-            - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@v1
-
-            - name: Login to GitHub Container Registry
-              uses: docker/login-action@v2
-              with:
-                  registry: ghcr.io
-                  username: ${{ github.repository_owner }}
-                  password: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Build and push AMD64 image
-              uses: docker/build-push-action@v3
-              with:
-                  context: .
-                  file: ./Dockerfile
-                  platforms: linux/amd64
-                  push: true
-                  tags: ghcr.io/muhammadashouri/latestapps:latest-amd64
+                  tags: ghcr.io/muhammadashouri/latestapps:latest
