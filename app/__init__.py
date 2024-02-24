@@ -1,5 +1,6 @@
 import logging
 
+from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI, Request, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
@@ -21,6 +22,7 @@ app = FastAPI(
     redoc_url='/redoc' if DOCS else None
 )
 app.openapi = custom_openapi(app)
+scheduler = BackgroundScheduler({'apscheduler.job_defaults.max_instances': 2}, timezone='UTC')
 logger = logging.getLogger('uvicorn.error')
 app.add_middleware(
     CORSMiddleware,
@@ -30,7 +32,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from app import  views  # noqa
+from app import  views, jobs  # noqa
 
 def use_route_names_as_operation_ids(app: FastAPI) -> None:
     for route in app.routes:
@@ -38,6 +40,17 @@ def use_route_names_as_operation_ids(app: FastAPI) -> None:
             route.operation_id = route.name
 
 use_route_names_as_operation_ids(app)
+
+
+@app.on_event("startup")
+def on_startup():
+    scheduler.start()
+
+
+@app.on_event("shutdown")
+def on_shutdown():
+    scheduler.shutdown()
+
 
 @app.exception_handler(RequestValidationError)
 def validation_exception_handler(request: Request, exc: RequestValidationError):
